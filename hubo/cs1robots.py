@@ -67,7 +67,7 @@ class _Beeper(object):
   def set_number(self, num):
     self.num = num
     self.text.setMessage("%d" % num)
-    
+
 class _World(object):
   """This class defines the world's logic."""
 
@@ -120,7 +120,7 @@ class _World(object):
     """Returns True if there is no wall or border here."""
     return not ((col, row) in self.walls or
                 (col, row) in self.borders)
-  
+
   def add_beeper(self, av, st):
     """Add a single beeper."""
     assert self.layer
@@ -166,19 +166,19 @@ class _World(object):
     self.layer = _g.Layer()
     # Create avenues
     for av in range(self.av):
-      x = self.left + self.ts * (2 * av + 1) 
+      x = self.left + self.ts * (2 * av + 1)
       l = _g.Path([_g.Point(x, self.top), _g.Point(x, self.bottom)])
       l.setBorderColor("light gray")
       self.layer.add(l)
-      self.layer.add(_g.Text("%d" % (av + 1), 10, 
+      self.layer.add(_g.Text("%d" % (av + 1), 10,
                              _g.Point(x, self.bottom + self.ts)))
     # Create streets
     for st in range(self.st):
-      y = self.bottom - self.ts * (2 * st + 1) 
+      y = self.bottom - self.ts * (2 * st + 1)
       l = _g.Path([_g.Point(self.left, y), _g.Point(self.right, y)])
       l.setBorderColor("light gray")
       self.layer.add(l)
-      self.layer.add(_g.Text("%d" % (st + 1), 10, 
+      self.layer.add(_g.Text("%d" % (st + 1), 10,
                              _g.Point(self.left - self.ts, y)))
     # Create border
     border = _g.Polygon(_g.Point(self.left, self.bottom),
@@ -207,7 +207,7 @@ class _World(object):
       self._create_beeper(av, st)
     # Layer finished
     _scene.add(self.layer)
-    
+
   def update_layer(self):
     _scene.remove(self.layer)
     self.beeper_icons = {}
@@ -232,7 +232,7 @@ class _World(object):
     else:
       beeper_string = "beepers = {}\n"
     out.write(av_string + st_string + wall_string + beeper_string)
-    
+
 # --------------------------------------------------------------------
 
 def create_world(avenues = 10, streets = 10):
@@ -263,7 +263,7 @@ def _check_world(contents):
   for char in safe:
     if char.isalpha():
       raise ValueError("Invalid word or character in world file")
-    
+
 def load_world(filename = None):
   """Loads a robot world from filename.
   Opens file-chooser if no filename is given."""
@@ -271,9 +271,9 @@ def load_world(filename = None):
   if _scene:
     raise RuntimeError("A robot world already exists!")
   if not filename:
-    filename = _easygui.fileopenbox("Select a Robot world", 
+    filename = _easygui.fileopenbox("Select a Robot world",
                                     "Robot World", '*', [ "*.wld" ])
-    if not filename: 
+    if not filename:
       raise RuntimeError("No world file selected.")
   txt = open(filename, 'rb').read()
   txt = _re.sub('\r\n', '\n', txt) # Windows
@@ -300,9 +300,9 @@ def save_world(filename = None):
   """Save a robot world to filename.
   Opens file-chooser if no filename is given."""
   if not filename:
-    filename = _easygui.filesavebox("Select a Robot world", 
+    filename = _easygui.filesavebox("Select a Robot world",
                                     "Robot World", '*', [ "*.wld" ])
-    if not filename: 
+    if not filename:
       raise RuntimeError("No world file selected.")
   out = open(filename, "w")
   _world.save(out)
@@ -350,7 +350,7 @@ def edit_world():
         _world.toggle_wall(col, row)
         _world.update_layer()
         _scene.refresh()
-  
+
 # --------------------------------------------------------------------
 
 class Robot(object):
@@ -393,7 +393,7 @@ class Robot(object):
 
   def _refresh(self):
     _scene.refresh()
-      
+
   def __del__(self):
     if _scene:
       for i in range(4):
@@ -439,14 +439,14 @@ With color argument, start a new trace in that color."""
       self._x += xx
       self._y += yy
     else:
-      raise RobotError("That move really hurt!\n Please, make sure that " + 
+      raise RobotError("That move really hurt!\n Please, make sure that " +
                        "there is no wall in front of me!""")
     self._update_pos()
     self._update_trace()
     self._refresh()
     if self._delay > 0:
       _time.sleep(self._delay)
-    
+
   def front_is_clear(self):
     """Returns True if no wall or border in front of robot."""
     col = 2 * self._x - 1

@@ -1,7 +1,7 @@
 #
 # cs1media.py
 #
-# Environment for manipulating Images 
+# Environment for manipulating Images
 #
 # 2010/03/24 Otfried Cheong
 # 2010/09/02: Convert image to RGB on loading
@@ -71,11 +71,11 @@ class Picture(object):
     """Save image as filename.
     If no filename is given, open file-chooser."""
     if not filename:
-      filename = _easygui.filesavebox("Save image as", _sys.argv[0], 
+      filename = _easygui.filesavebox("Save image as", _sys.argv[0],
                                       "unnamed.png",
                                       [ [ "*.jpg", "*.png", "*.bmp",
                                           "Image files" ] ])
-      if not filename: 
+      if not filename:
         raise RuntimeError("No file name provided for saving.")
     self._surf.save(filename)
 
@@ -84,7 +84,7 @@ class Picture(object):
 def create_picture(width, height, color = (0,0,0)):
   """Create an image of size width x height, and fill with color."""
   if width < 0 or height < 0:
-    raise ValueError("Invalid image dimensions: " + str(width) + ", " 
+    raise ValueError("Invalid image dimensions: " + str(width) + ", "
                      + str(height))
   p = Picture(_Image.new("RGB", (width, height), color))
   return p
@@ -93,11 +93,11 @@ def load_picture(filename = None):
   """Create an image by loading file filename.
   Opens file-chooser if no file name given."""
   if not filename:
-    filename = _easygui.fileopenbox("Select an image", 
-                                    _sys.argv[0], '*', 
+    filename = _easygui.fileopenbox("Select an image",
+                                    _sys.argv[0], '*',
                                     [ [ "*.jpg", "*.png", "*.bmp", "*.gif",
                                         "Image files" ] ])
-    if not filename: 
+    if not filename:
       raise RuntimeError("No image file selected.")
   img = _Image.open(filename)
   if img.mode != "RGB":
@@ -260,20 +260,20 @@ class Color(object):
   whitesmoke = (245, 245, 245)
   yellow = (255, 255, 0)
   yellowgreen = (154, 205, 50)
-  
+
 # --------------------------------------------------------------------
 
 class PictureTool:
 
   def __init__(self, pict):
     self.pict = pict
-    
+
   def run_tool(self):
     self.root = _Tk.Tk()
-    
+
     self.top = _Tk.Menu(self.root, bd=2)
     self.root.config(menu=self.top)
-    
+
     self.zoom = _Tk.Menu(self.top, tearoff=0)
     self.zoom.add_command(label='25%', command=lambda : self.zoomf(0.25),
                           underline=0)
@@ -291,22 +291,22 @@ class PictureTool:
                           underline=0)
     self.zoom.add_command(label='800%', command=lambda : self.zoomf(8.0),
                           underline=0)
-    
+
     self.top.add_cascade(label='Zoom', menu=self.zoom, underline=0)
-    
+
     # create a frame and pack it
     self.frame1 = _Tk.Frame(self.root)
     self.frame1.pack(side=_Tk.BOTTOM, fill=_Tk.X)
-    
+
     self.root.im = self.pict._surf
     self.root.zoomMult = 1.0
-    
+
     self.root.photo1 = _ImageTk.PhotoImage(image=self.root.im)
-    
+
     self.root.title(self.pict.title())
-    
+
     # Canvas for the Image, with scroll bars
-    
+
     self.canvas1 = _Tk.Canvas(self.frame1, width=self.root.photo1.width() -
                               1, height=self.root.photo1.height() - 1,
                               cursor="crosshair", borderwidth=0)
@@ -314,19 +314,19 @@ class PictureTool:
     self.root.hbar = _Tk.Scrollbar(self.frame1, orient='horizontal')
     self.root.vbar.pack(side=_Tk.RIGHT, fill=_Tk.Y)
     self.root.hbar.pack(side=_Tk.BOTTOM, fill=_Tk.X)
-    
-    self.canvas1.pack(side=_Tk.BOTTOM, padx=0, pady=0, anchor=_Tk.NW, 
+
+    self.canvas1.pack(side=_Tk.BOTTOM, padx=0, pady=0, anchor=_Tk.NW,
                       fill=_Tk.BOTH, expand=_Tk.YES)
 
     # call on scroll move
-    self.root.vbar.config(command=self.canvas1.yview)  
+    self.root.vbar.config(command=self.canvas1.yview)
     self.root.hbar.config(command=self.canvas1.xview)
     # call on canvas move
-    self.canvas1.config(yscrollcommand=self.root.vbar.set)  
+    self.canvas1.config(yscrollcommand=self.root.vbar.set)
     self.canvas1.config(xscrollcommand=self.root.hbar.set)
     self.draw_image(self.root.im)
     self.canvas1.bind('<Button-1>', self.canvClick)
-    
+
     self.v = _Tk.StringVar()
     self.v.set("R:      G:      B:     ")
     self.xy = _Tk.StringVar()
@@ -343,7 +343,7 @@ class PictureTool:
 
     # start the event loop
     self.root.mainloop()
-      
+
   def zoomf(self, factor):
     # zoom in or out
     self.root.zoomMult = factor
@@ -357,18 +357,18 @@ class PictureTool:
     scrhigh -= 200  # leave room for top display/button at max photo size
     imgwide = self.root.photo1.width()  # size in pixels
     imghigh = self.root.photo1.height()  # same as imgpil.size
-    
+
     fullsize = (0, 0, imgwide, imghigh)  # scrollable
     viewwide = min(imgwide, scrwide)  # viewable
     viewhigh = min(imghigh, scrhigh)
-    
+
     self.canvas1.delete('all')  # clear prior photo
     self.canvas1.config(height=viewhigh, width=viewwide)  # viewable window size
     self.canvas1.config(scrollregion=fullsize)  # scrollable area size
-    
+
     self.root.img = self.canvas1.create_image(0, 0, image=self.root.photo1,
                                               anchor=_Tk.NW)
-    
+
     if imgwide <= scrwide and imghigh <= scrhigh:  # too big for display?
       self.root.state('normal')  # no: win size per img
     elif (_sys.platform)[:3] == 'win':
@@ -392,7 +392,7 @@ class PictureTool:
         self.v.set(rgb)
     except ValueError:
       pass
-    
+
 def picture_tool(filename = None):
   """Allows you to find information about digital images.
 
@@ -406,7 +406,7 @@ def picture_tool(filename = None):
   The following information in the toolbar changes to reflect the
   properties of the pixel you selected:
 
-  X = the x coordinate of the pixel (starting with 0, counting from the left) 
+  X = the x coordinate of the pixel (starting with 0, counting from the left)
   Y = the y coordinate of the pixel (starting with 0, counting from the top)
   R = the Red value of the pixel (0 to 255)
   G = the Green value of the pixel (0 to 255)
@@ -416,25 +416,25 @@ def picture_tool(filename = None):
 
   Zooming in/out:
   To Zoom, select the amount of zoom you want from the zoom menu.
-  Less than 100% zooms out and more than 100% zooms in. 
+  Less than 100% zooms out and more than 100% zooms in.
   The 100% zoom level will always return you to your orginal picture.
-  
+
   filename: a string representing the location and name of picture.
   If no filename is given, a file-chooser opens."""
 
   if not filename:
-    filename = _easygui.fileopenbox("Select an image", 
-                                    _sys.argv[0], '*', 
+    filename = _easygui.fileopenbox("Select an image",
+                                    _sys.argv[0], '*',
                                     [ [ "*.jpg", "*.png", "*.bmp", "*.gif",
                                         "Image files" ] ])
-    if not filename: 
+    if not filename:
       raise RuntimeError("No image file selected.")
   img = load_picture(filename)
   tool = PictureTool(img)
   tool.run_tool()
 
 # --------------------------------------------------------------------
-  
+
 if __name__ == "__main__":
   if len(_sys.argv > 1):
     picture_tool(_sys.argv[1])

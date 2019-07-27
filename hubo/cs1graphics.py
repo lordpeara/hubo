@@ -39,11 +39,16 @@ import tempfile as _tempfile
 import os as _os
 import sys as _sys
 import traceback as _traceback
-from array import array as _array
-import cStringIO as _cStringIO
 import base64 as _base64
 
+from array import array as _array
+
 # change in module names for Python 2 vs 3
+try:
+    import cStringIO as io
+except ImportError:
+    import io
+
 try:
     import Queue as _Queue
 except ImportError:
@@ -63,12 +68,10 @@ except ImportError:
     except ImportError:
         raise ImportError('cs1graphics requires that Tkinter be installed')
 
-try:
-    import Image as _Image
-    import ImageDraw as _ImageDraw
-    import ImageTk as _ImageTk
-except ImportError:
-    raise ImportError('cs1graphics requires that PIL be installed')
+from PIL import Image as _Image
+from PIL import ImageDraw as _ImageDraw
+from PIL import ImageTk as _ImageTk
+
 _pilAvailable = True
 
 # Library
@@ -1480,7 +1483,7 @@ class _GraphicsManager:
                     i = _Tkinter.PhotoImage(file=command[1])
                 else:
                     data = _base64.b64decode(s[7:])
-                    r = _cStringIO.StringIO(data)
+                    r = io.StringIO(data)
                     i = _ImageTk.PhotoImage(_Image.open(r).convert('RGBA'))
             except:
                 good = False

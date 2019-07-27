@@ -1483,7 +1483,7 @@ class _GraphicsManager:
                     i = _Tkinter.PhotoImage(file=command[1])
                 else:
                     data = _base64.b64decode(s[7:])
-                    r = io.StringIO(data)
+                    r = io.BytesIO(data)
                     i = _ImageTk.PhotoImage(_Image.open(r).convert('RGBA'))
             except:
                 good = False

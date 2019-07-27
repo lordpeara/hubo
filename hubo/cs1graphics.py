@@ -46,6 +46,7 @@ from array import array as _array
 # change in module names for Python 2 vs 3
 try:
     import cStringIO as io
+    io.BytesIO = io.StringIO
 except ImportError:
     import io
 

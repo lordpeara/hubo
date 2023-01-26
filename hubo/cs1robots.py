@@ -269,7 +269,7 @@ def load_world(filename = None):
                                     "Robot World", '*', [ "*.wld" ])
     if not filename:
       raise RuntimeError("No world file selected.")
-  txt = open(filename, 'rb').read()
+  txt = open(filename, 'rb').read().decode("utf-8")
   txt = _re.sub('\r\n', '\n', txt) # Windows
   txt = _re.sub('\r', '\n', txt)  # Mac
   _check_world(txt)
